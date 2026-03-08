@@ -796,3 +796,314 @@ php artisan cache:forget spatie.permission.cache
 ## 👨‍💻 Author
 
 Built with ❤️ using Laravel + Spatie Permission + 4-Layer Architecture.
+
+
+# Laravel Brand → Product → Stock Management
+
+A full **4-Layer Architecture** Laravel application for managing Brands, Products, and Stock (Serial Numbers) using the **Repository Pattern**.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Laravel 10+ |
+| Language | PHP 8.1+ |
+| Database | MySQL / PostgreSQL |
+| Frontend | Blade + Bootstrap 5 |
+| Architecture | Controller → Service → Repository → Model |
+
+---
+
+## Architecture Overview
+
+```
+HTTP Request
+     │
+     ▼
+┌─────────────────┐
+│   Form Request  │  ← Validation (StoreRequest / UpdateRequest)
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   Controller    │  ← Handles HTTP, delegates to Service
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│    Service      │  ← Business logic (hashing, role assign, etc.)
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   Repository    │  ← Database queries via Eloquent
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│     Model       │  ← Eloquent ORM, relationships, casts
+└─────────────────┘
+```
+
+---
+
+## Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── BrandController.php
+│   │   ├── ProductController.php
+│   │   └── StockController.php
+│   └── Requests/
+│       ├── BrandStoreRequest.php
+│       ├── BrandUpdateRequest.php
+│       ├── ProductStoreRequest.php
+│       ├── ProductUpdateRequest.php
+│       ├── StockStoreRequest.php
+│       └── StockUpdateRequest.php
+├── Models/
+│   ├── Brand.php
+│   ├── Product.php
+│   └── Stock.php
+├── Repositories/
+│   ├── Contracts/
+│   │   ├── BrandRepositoryInterface.php
+│   │   ├── ProductRepositoryInterface.php
+│   │   └── StockRepositoryInterface.php
+│   └── Eloquent/
+│       ├── BrandRepository.php
+│       ├── ProductRepository.php
+│       └── StockRepository.php
+├── Services/
+│   ├── BrandService.php
+│   ├── ProductService.php
+│   └── StockService.php
+└── Providers/
+    └── RepositoryServiceProvider.php
+
+database/
+└── migrations/
+    ├── 2024_01_01_000001_create_brands_table.php
+    ├── 2024_01_01_000002_create_products_table.php
+    └── 2024_01_01_000003_create_stocks_table.php
+
+resources/views/
+├── brands/
+│   ├── index.blade.php
+│   ├── create.blade.php
+│   └── edit.blade.php
+├── products/
+│   ├── index.blade.php
+│   ├── create.blade.php
+│   └── edit.blade.php
+└── stocks/
+    ├── index.blade.php
+    ├── create.blade.php
+    └── edit.blade.php
+
+routes/
+└── web.php
+```
+
+---
+
+## Database Schema
+
+### `brands`
+| Column | Type | Notes |
+|---|---|---|
+| id | bigIncrements | Primary Key |
+| name | string(100) | Unique |
+| created_at | timestamp | |
+| updated_at | timestamp | |
+
+### `products`
+| Column | Type | Notes |
+|---|---|---|
+| id | bigIncrements | Primary Key |
+| brand_id | foreignId | FK → brands.id (cascade delete) |
+| name | string(150) | |
+| created_at | timestamp | |
+| updated_at | timestamp | |
+
+### `stocks`
+| Column | Type | Notes |
+|---|---|---|
+| id | bigIncrements | Primary Key |
+| product_id | foreignId | FK → products.id (cascade delete) |
+| serial_number | string(100) | Unique |
+| created_at | timestamp | |
+| updated_at | timestamp | |
+
+---
+
+## Installation
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+```
+
+### 2. Install dependencies
+```bash
+composer install
+npm install && npm run build
+```
+
+### 3. Environment setup
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Configure `.env`
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### 5. Run migrations
+```bash
+php artisan migrate
+```
+
+### 6. Register the Service Provider
+
+Open `config/app.php` and add to the `providers` array:
+
+```php
+'providers' => [
+    // ...
+    App\Providers\RepositoryServiceProvider::class,
+],
+```
+
+### 7. Serve the application
+```bash
+php artisan serve
+```
+
+Visit: `http://127.0.0.1:8000`
+
+---
+
+## Routes
+
+| Method | URI | Controller@Action | Name |
+|---|---|---|---|
+| GET | /brands | BrandController@index | brands.index |
+| GET | /brands/create | BrandController@create | brands.create |
+| POST | /brands | BrandController@store | brands.store |
+| GET | /brands/{id}/edit | BrandController@edit | brands.edit |
+| PUT | /brands/{id} | BrandController@update | brands.update |
+| DELETE | /brands/{id} | BrandController@destroy | brands.destroy |
+| GET | /products | ProductController@index | products.index |
+| GET | /products/create | ProductController@create | products.create |
+| POST | /products | ProductController@store | products.store |
+| GET | /products/{id}/edit | ProductController@edit | products.edit |
+| PUT | /products/{id} | ProductController@update | products.update |
+| DELETE | /products/{id} | ProductController@destroy | products.destroy |
+| GET | /stocks | StockController@index | stocks.index |
+| GET | /stocks/create | StockController@create | stocks.create |
+| POST | /stocks | StockController@store | stocks.store |
+| GET | /stocks/{id}/edit | StockController@edit | stocks.edit |
+| PUT | /stocks/{id} | StockController@update | stocks.update |
+| DELETE | /stocks/{id} | StockController@destroy | stocks.destroy |
+
+---
+
+## Feature Highlights
+
+### Brand
+- Simple CRUD with a unique brand name.
+- Displays total product count per brand on the index page.
+
+### Product
+- Linked to a brand via dropdown select.
+- Displays brand name and total stock (serial) count on the index page.
+
+### Stock (Serial Numbers)
+- Select a product, then add **one or more serial numbers** dynamically.
+- The **"+ Add Another Serial"** button appends a new input row.
+- Each serial number is validated for uniqueness before saving.
+- Uses **bulk insert** (`Model::insert()`) for performance when saving multiple serials at once.
+- Edit page updates a single serial number entry.
+
+---
+
+## Relationships
+
+```
+Brand  ──has many──▶  Product  ──has many──▶  Stock
+                                               (serial_number)
+```
+
+```php
+// Brand
+$brand->products        // HasMany → Product
+
+// Product
+$product->brand         // BelongsTo → Brand
+$product->stocks        // HasMany → Stock
+
+// Stock
+$stock->product         // BelongsTo → Product
+$stock->product->brand  // Nested: BelongsTo → Brand
+```
+
+---
+
+## Validation Rules Summary
+
+### Brand Store / Update
+| Field | Rules |
+|---|---|
+| name | required, string, max:100, unique:brands |
+
+### Product Store / Update
+| Field | Rules |
+|---|---|
+| brand_id | required, integer, exists:brands,id |
+| name | required, string, max:150 |
+
+### Stock Store
+| Field | Rules |
+|---|---|
+| product_id | required, integer, exists:products,id |
+| serial_numbers | required, array, min:1 |
+| serial_numbers.* | required, string, max:100, distinct, unique:stocks |
+
+### Stock Update
+| Field | Rules |
+|---|---|
+| product_id | required, integer, exists:products,id |
+| serial_number | required, string, max:100, unique (ignore self) |
+
+---
+
+## How Repository Binding Works
+
+`RepositoryServiceProvider` binds each interface to its concrete Eloquent implementation:
+
+```php
+$this->app->bind(BrandRepositoryInterface::class,   BrandRepository::class);
+$this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+$this->app->bind(StockRepositoryInterface::class,   StockRepository::class);
+```
+
+This means you can swap `BrandRepository` for any other implementation (e.g. an API-based repository) without touching the Service or Controller.
+
+---
+
+## License
+
+MIT License. Free to use and modify.
