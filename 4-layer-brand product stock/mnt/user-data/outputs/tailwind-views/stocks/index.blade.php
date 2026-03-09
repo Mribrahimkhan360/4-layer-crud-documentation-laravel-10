@@ -1,30 +1,30 @@
 @extends('layouts.app')
-@section('title', 'Brands')
-@section('subtitle', 'Manage all product brands')
+@section('title', 'Stock')
+@section('subtitle', 'Manage all serial numbers by product')
 
 @section('header-action')
-<a href="{{ route('brands.create') }}"
+<a href="{{ route('stocks.create') }}"
    class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-brand-600/30 transition-all duration-200 hover:scale-105">
     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
     </svg>
-    Add Brand
+    Add Stock
 </a>
 @endsection
 
 @section('content')
 
-{{-- Stats Card --}}
+{{-- Stats --}}
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
     <div class="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
         <div class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center">
             <svg class="w-6 h-6 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
         </div>
         <div>
-            <p class="text-2xl font-bold text-slate-800">{{ $brands->count() }}</p>
-            <p class="text-xs text-slate-500 font-medium">Total Brands</p>
+            <p class="text-2xl font-bold text-slate-800">{{ $stocks->count() }}</p>
+            <p class="text-xs text-slate-500 font-medium">Total Serial Numbers</p>
         </div>
     </div>
     <div class="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
@@ -34,41 +34,41 @@
             </svg>
         </div>
         <div>
-            <p class="text-2xl font-bold text-slate-800">{{ $brands->sum('products_count') }}</p>
-            <p class="text-xs text-slate-500 font-medium">Total Products</p>
+            <p class="text-2xl font-bold text-slate-800">{{ $stocks->pluck('product_id')->unique()->count() }}</p>
+            <p class="text-xs text-slate-500 font-medium">Products in Stock</p>
         </div>
     </div>
     <div class="bg-white rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center">
-            <svg class="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+        <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center">
+            <svg class="w-6 h-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
             </svg>
         </div>
         <div>
-            <p class="text-2xl font-bold text-slate-800">{{ $brands->where('products_count', '>', 0)->count() }}</p>
-            <p class="text-xs text-slate-500 font-medium">Active Brands</p>
+            <p class="text-2xl font-bold text-slate-800">{{ $stocks->pluck('product.brand_id')->unique()->count() }}</p>
+            <p class="text-xs text-slate-500 font-medium">Brands in Stock</p>
         </div>
     </div>
 </div>
 
-{{-- Table Card --}}
+{{-- Table --}}
 <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-        <p class="font-semibold text-slate-700 text-sm">All Brands</p>
-        <span class="text-xs text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">{{ $brands->count() }} records</span>
+        <p class="font-semibold text-slate-700 text-sm">All Stock Entries</p>
+        <span class="text-xs text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">{{ $stocks->count() }} records</span>
     </div>
 
-    @if($brands->isEmpty())
+    @if($stocks->isEmpty())
     <div class="py-20 text-center">
         <div class="w-16 h-16 rounded-2xl bg-slate-100 mx-auto flex items-center justify-center mb-4">
             <svg class="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
         </div>
-        <p class="text-slate-500 font-medium text-sm">No brands yet</p>
-        <p class="text-slate-400 text-xs mt-1">Start by adding your first brand.</p>
-        <a href="{{ route('brands.create') }}" class="mt-4 inline-flex items-center gap-1.5 text-brand-600 text-sm font-semibold hover:underline">
-            + Add Brand
+        <p class="text-slate-500 font-medium text-sm">No stock entries yet</p>
+        <p class="text-slate-400 text-xs mt-1">Start by adding serial numbers to a product.</p>
+        <a href="{{ route('stocks.create') }}" class="mt-4 inline-flex items-center gap-1.5 text-brand-600 text-sm font-semibold hover:underline">
+            + Add Stock
         </a>
     </div>
     @else
@@ -76,40 +76,44 @@
         <thead>
             <tr class="bg-slate-50 border-b border-slate-100">
                 <th class="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider w-12">#</th>
-                <th class="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Brand Name</th>
-                <th class="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Products</th>
+                <th class="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Serial Number</th>
+                <th class="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Product</th>
+                <th class="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Brand</th>
                 <th class="text-left px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Added</th>
                 <th class="text-right px-6 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
-            @foreach($brands as $brand)
+            @foreach($stocks as $stock)
             <tr class="hover:bg-slate-50/60 transition-colors duration-150">
                 <td class="px-6 py-4 text-slate-400 text-xs font-mono">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</td>
                 <td class="px-6 py-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center flex-shrink-0">
-                            <span class="text-brand-600 font-bold text-xs">{{ strtoupper(substr($brand->name, 0, 1)) }}</span>
-                        </div>
-                        <span class="font-semibold text-slate-700">{{ $brand->name }}</span>
-                    </div>
-                </td>
-                <td class="px-6 py-4">
-                    <span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full
-                        {{ $brand->products_count > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500' }}">
-                        {{ $brand->products_count }} products
+                    <span class="inline-flex items-center gap-2 font-mono text-xs font-semibold bg-slate-900 text-slate-100 px-3 py-1.5 rounded-lg tracking-wide">
+                        <svg class="w-3 h-3 text-brand-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                        {{ $stock->serial_number }}
                     </span>
                 </td>
-                <td class="px-6 py-4 text-slate-400 text-xs">{{ $brand->created_at->format('d M Y') }}</td>
+                <td class="px-6 py-4">
+                    <span class="text-slate-700 font-medium text-sm">{{ $stock->product->name }}</span>
+                </td>
+                <td class="px-6 py-4">
+                    <span class="inline-flex items-center gap-1.5 text-xs font-semibold bg-brand-50 text-brand-700 px-2.5 py-1 rounded-full">
+                        <span class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+                        {{ $stock->product->brand->name }}
+                    </span>
+                </td>
+                <td class="px-6 py-4 text-slate-400 text-xs">{{ $stock->created_at->format('d M Y') }}</td>
                 <td class="px-6 py-4">
                     <div class="flex items-center justify-end gap-2">
-                        <a href="{{ route('brands.edit', $brand->id) }}"
+                        <a href="{{ route('stocks.edit', $stock->id) }}"
                            class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-brand-600 bg-slate-100 hover:bg-brand-50 px-3 py-1.5 rounded-lg transition-all duration-150">
                             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                             Edit
                         </a>
-                        <form action="{{ route('brands.destroy', $brand->id) }}" method="POST"
-                              onsubmit="return confirm('Delete brand: {{ $brand->name }}?')">
+                        <form action="{{ route('stocks.destroy', $stock->id) }}" method="POST"
+                              onsubmit="return confirm('Delete serial: {{ $stock->serial_number }}?')">
                             @csrf @method('DELETE')
                             <button type="submit"
                                 class="inline-flex items-center gap-1.5 text-xs font-semibold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-all duration-150">
