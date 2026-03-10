@@ -84,7 +84,9 @@
         </div>
 
         <!-- Menu -->
-        <nav class="flex-1 px-4 py-6 space-y-1 text-sm overflow-y-auto">
+        <nav class="flex-1 px-4 py-6 space-y-1 text-sm overflow-y-auto min-h-screen">
+
+            <p class="text-xs uppercase text-gray-500 mt-2 mb-2 px-2 tracking-wider">Dashboard Management</p>
 
             <!-- Dashboard -->
             <a href="{{ route('dashboard') }}"
@@ -98,9 +100,22 @@
             </a>
 
             <!-- Section Label -->
+            <p class="text-xs uppercase text-gray-500 mt-2 mb-2 px-2 tracking-wider">Admin Management</p>
+
+            <a href="{{ route('admin.index') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 hover:text-white transition duration-200">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 20v-2a6 6 0 0112 0v2" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 10h2m-1-1v2" />
+                </svg>
+                Admin
+            </a>
+            
+            <!-- Section Label -->
             <p class="text-xs uppercase text-gray-500 mt-6 mb-2 px-2 tracking-wider">Management</p>
 
-            <a href="#"
+            <a href="{{ route('users.index') }}"
                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 hover:text-white transition duration-200">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -109,7 +124,7 @@
                 Users
             </a>
 
-            <a href="#"
+            <a href="{{ route('roles.index') }}"
                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 hover:text-white transition duration-200">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -118,13 +133,48 @@
                 Roles
             </a>
 
-            <a href="#"
+            <a href="{{ route('permissions.index') }}"
                class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 hover:text-white transition duration-200">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round"
                           d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                 </svg>
+
                 Permissions
+            </a>
+
+            <a href="{{ route('brands.index') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 hover:text-white transition duration-200">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                </svg>
+                Brands
+            </a>
+
+            <a href="{{ route('products.index') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 hover:text-white transition duration-200">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/>
+                </svg>
+                Products
+            </a>
+
+            <a href="{{ route('stocks.index') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 hover:text-white transition duration-200">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                Stocks
+            </a>
+            {{--     {{ route('orders.index') }}       --}}
+            <a href="{{ route('orders.index') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 hover:text-white transition duration-200">
+                <!-- Add to Cart Icon -->
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8H17m-10 0a1 1 0 11-2 0 1 1 0 012 0zm10 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+                </svg>
+                Order
             </a>
 
         </nav>
